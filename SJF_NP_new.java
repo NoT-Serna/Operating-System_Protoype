@@ -18,18 +18,25 @@ public class SJF_NP extends Scheduler{
    
     @Override
     public void getNext(boolean cpuEmpty) {
-        int min = 0;
-        if(!processes.isEmpty() && cpuEmpty){
-            for(Process p: processes){
-                if(p.getRemainingTimeInCurrentBurst() < min){
-                    min = p.getRemainingTimeInCurrentBurst();
-                }
+        int min = Integer.MAX_VALUE;
+
+        if (!processes.isEmpty() && cpuEmpty) {
+            Process shortestProcess = null;
+
+        for (Process p : processes) {
+            if (p.getRemainingTimeInCurrentBurst() < min) {
+                min = p.getRemainingTimeInCurrentBurst();
+                shortestProcess = p;
             }
-            Process p = processes.get(min);
-            processes.remove();
-            os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU,p);
+        }
+
+        if (shortestProcess != null) {
+            processes.remove(shortestProcess);
+
+            os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, shortestProcess);
         }
     }
+}
     
     
     @Override
