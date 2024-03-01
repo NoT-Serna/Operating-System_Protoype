@@ -18,11 +18,11 @@ public class SJF_NP extends Scheduler{
    
     @Override
     public void getNext(boolean cpuEmpty) {
-        int min = Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE; //Maximizes the min value to the highest possbile value
 
-        if (!processes.isEmpty() && cpuEmpty) {
+        if (!processes.isEmpty() && cpuEmpty) {  //Create a shortestProcess that points to null
             Process shortestProcess = null;
-
+        //Finding the shortest process based on the remaining burst time
         for (Process p : processes) {
             if (p.getRemainingTimeInCurrentBurst() < min) {
                 min = p.getRemainingTimeInCurrentBurst();
@@ -30,9 +30,10 @@ public class SJF_NP extends Scheduler{
             }
         }
 
+        // Once the shortest process is found, remove the process from the list
         if (shortestProcess != null) {
             processes.remove(shortestProcess);
-
+            // Have the process go to CPU
             os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, shortestProcess);
         }
     }
@@ -40,9 +41,9 @@ public class SJF_NP extends Scheduler{
     
     
     @Override
-    public void newProcess(boolean cpuEmpty) {} //Non-preemtive
+    public void newProcess(boolean cpuEmpty) {} 
 
     @Override
-    public void IOReturningProcess(boolean cpuEmpty) {} //Non-preemtive
+    public void IOReturningProcess(boolean cpuEmpty) {}
     
 }
