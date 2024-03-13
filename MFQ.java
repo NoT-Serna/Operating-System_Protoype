@@ -29,17 +29,15 @@ public class MFQ extends Scheduler{
         this(os);
         schedulers.addAll(Arrays.asList(s));
         if(s.length > 0)
-            currentScheduler = 0; // DON'T WE HAVE TO INCREMENT THIS VALUE SOMETIME?
+            currentScheduler = 0;
     }
 
     @Override
     public void addProcess(Process p){ //Overwriting the parent's addProcess(Process p) method may be necessary in order to decide what to do with process coming from the CPU.
         if (p.getState() == ProcessState.NEW) { // If the process is NEW, ADD IT TO THE FIRST QUEUE
-            newProcess(os.isCPUEmpty());
-            schedulers.getFirst().addProcess(p); // add p to the first queue
+            schedulers.getFirst().addProcess(p);
         } else if (p.getState() == ProcessState.IO) { //I f the process is returning from IO, ADD IT TO THE FIRST QUEUE
-            IOReturningProcess(os.isCPUEmpty());
-            schedulers.getFirst().addProcess(p); // add p to the first queue
+            schedulers.getFirst().addProcess(p);
         } else if (p.getState() == ProcessState.CPU) { // if process comes from the cpu, move it to the next queue
             if (p.getCurrentScheduler() < schedulers.size()-1) { // check that the process is not in the last queue, if it is, stay on that last queue (do nothing)
                 schedulers.get(p.getCurrentScheduler()+1).addProcess(p); // move the process to the next queue
@@ -49,7 +47,6 @@ public class MFQ extends Scheduler{
 
     void defineCurrentScheduler(){
         //This method is suggested to help you find the scheduler that should be the next in line to provide processes... perhaps the one with process in the queue?
-        int currentScheduler;
         for (int i = 0; i < schedulers.size(); i++) {
             if (!schedulers.get(i).isEmpty()) {
                 currentScheduler = i;
@@ -63,6 +60,17 @@ public class MFQ extends Scheduler{
     public void getNext(boolean cpuEmpty) {
         //Suggestion: now that you know on which scheduler a process is, you need to keep advancing that scheduler. If it a preemptive one, you need to notice the changes
         //that it may have caused and verify if the change is coherent with the priority policy for the queues.
+
+        if(!cpuEmpty) { //If the CPU is not empty, the scheduler needs to keep advancing the current scheduler
+            Process p = os.getProcessInCPU();
+            schedulers.get(p.getCurrentScheduler()).getNext();
+            addProcess(p);
+
+        } else { //If the CPU is empty, the scheduler needs to find the next scheduler with a process to send to the CPU
+            defineCurrentScheduler();
+            schedulers.get(currentScheduler).getNext();
+            
+        }
 
     }
 
