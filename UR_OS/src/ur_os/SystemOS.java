@@ -37,7 +37,7 @@ public class SystemOS implements Runnable{
         execution = new ArrayList();
         processes = new ArrayList();
         //initSimulationQueue();
-        initSimulationQueueSimple();
+        //initSimulationQueueSimple();
         initSimulationQueueSimpler2();
         showProcesses();
     }
@@ -280,39 +280,45 @@ public class SystemOS implements Runnable{
         System.out.println(sb.toString());
     }
     
-    
-    public double calcCPUUtilization(){
-       
-        
-        return 0;
+  
+  public double calcCPUUtilization(){
+    int totalExecutionTime = clock; // Total execution cycles
+    int totalBurstTime = 0;
+    for (Process p : processes) {
+        totalBurstTime += p.getTotalExecutionTime();
     }
-    
-    public double calcTurnaroundTime(){
-        
-        double tot = 0;
-        
-       
-        
-        return tot/processes.size();
+
+    return (double) totalBurstTime / totalExecutionTime;
+}
+
+public double calcTurnaroundTime(){
+    int totalTurnaroundTime = 0;
+    for (Process p : processes) {
+        totalTurnaroundTime += (clock - p.getTime_init());
     }
-    
-    public double calcThroughput(){
-        return 0;
+    return (double) totalTurnaroundTime / processes.size();
+}
+
+public double calcThroughput(){
+    return (double) processes.size() / clock; // Processes per cycle
+}
+
+public double calcAvgWaitingTime(){
+    int totalWaitingTime = 0;
+    for (Process p : processes) {
+        totalWaitingTime += (clock - p.getTime_init() - p.getTotalExecutionTime());
     }
+    return (double) totalWaitingTime / processes.size();
+}
+
+public double calcAvgContextSwitches(){
+    int totalContextSwitches = execution.size() - processes.size(); // Context switches are the difference between executions and processes (assuming each process executes once)
+    return (double) totalContextSwitches / processes.size();
+}
+
+
     
-    public double calcAvgWaitingTime(){
-        double tot = 0;
-        
-        
-        return tot/processes.size();
-    }
     
-    public double calcAvgContextSwitches(){
-        int cont = 1;
-        
-        
-        return cont / processes.size();
-    }
     
     
 }
