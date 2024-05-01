@@ -4,8 +4,6 @@ import ur_os.process.ProcessMemoryManager;
 import ur_os.process.ProcessMemoryManagerType;
 
 /**
- * Segmentation Memory Manager for managing memory with segmentation.
- * Extends the ProcessMemoryManager class.
  * 
  * @author Serna
  */
@@ -15,10 +13,7 @@ public class PMM_Segmentation extends ProcessMemoryManager {
     int limit;
     PageTable pt;
     
-    /**
-     * Default constructor for PMM_Segmentation.
-     * Initializes base to 0, limit to 100, and pt to null.
-     */
+
     public PMM_Segmentation() {
         this.base = 0;
         this.limit = 100;
