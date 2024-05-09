@@ -25,7 +25,4 @@ public class FirstFitMemorySlotManager extends FreeMemorySlotManager{
         }
         return m;
     }
-
-    
-    
 }
