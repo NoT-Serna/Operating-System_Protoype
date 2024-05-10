@@ -15,7 +15,6 @@ public class BestFitMemorySlotManager extends FreeMemorySlotManager{
     
     @Override
     public MemorySlot getSlot(int size) {
-        MemorySlot m = null;
         ArrayList<Integer> sizes = new ArrayList<>();
         for(MemorySlot slot : list){
             sizes.add(slot.getSize()-size);
@@ -27,7 +26,6 @@ public class BestFitMemorySlotManager extends FreeMemorySlotManager{
             }
         }
         list.get(minIndex).setSize(list.get(minIndex).getSize()-size);
-        m = new MemorySlot(list.get(minIndex).getBase()+list.get(minIndex).getSize(),size);
-        return m;
+        return new MemorySlot(list.get(minIndex).getBase()+list.get(minIndex).getSize(),size);
     }
 }
