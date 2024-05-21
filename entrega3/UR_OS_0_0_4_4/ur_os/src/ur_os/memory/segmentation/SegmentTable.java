@@ -82,13 +82,21 @@ public class SegmentTable {
     }
     
     public MemoryAddress getSegmentMemoryAddressFromLocalAddress(int locAdd){
-        //To do
-        return null;
+        for (int i = 0; i < segmentTable.size(); i++) {
+        SegmentTableEntry segment = segmentTable.get(i);
+        if (locAdd >= segment.getBase() && locAdd < segment.getBase() + segment.getLimit()) {
+            int offset = locAdd - segment.getBase();
+            return new MemoryAddress(i, offset);
+        }
     }
+    return new MemoryAddress(-1, -1);
+}
     
     public MemoryAddress getPhysicalMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
-        //To do
-        return null;
+        SegmentTableEntry segment = segmentTable.get(m.getDivision());
+        int base = segment.getBase();
+        int physicalAddress = base + m.getOffset();
+        return new MemoryAddress(physicalAddress, 0);
     }
     
     public SegmentTableEntry getSegment(int i){
