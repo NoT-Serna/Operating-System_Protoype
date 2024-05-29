@@ -18,7 +18,7 @@ public class FirstFitMemorySlotManager extends FreeMemorySlotManager{
         for(MemorySlot slot : list){
             if(slot.getSize() >= size){
                 slot.setSize(slot.getSize() - size);
-                m = new MemorySlot(slot.getBase() + slot.getSize(), size);
+                m = new MemorySlot(slot.getBase(), size);
                 break;
             }
         }
